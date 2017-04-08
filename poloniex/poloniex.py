@@ -40,7 +40,7 @@ class Poloniex(PoloniexPublic):
 
     """Client to connect to Poloniex private APIs."""
 
-    def __init__(self, apikey, secret, public_url=_PUBLIC_URL,
+    def __init__(self, apikey=None, secret=None, public_url=_PUBLIC_URL,
                  private_url=_PRIVATE_URL, limit=6):
         """Initialize the Poloniex private client.
 
