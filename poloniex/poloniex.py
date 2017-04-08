@@ -33,7 +33,7 @@ class PoloniexPublic(object):
     def return24Volume(self):
         """Returns the 24-hour volume for all markets, plus totals for
         primary currencies."""
-        return self._public('return24Volume')
+        return self._public('return24hVolume')
 
 
 class Poloniex(PoloniexPublic):
