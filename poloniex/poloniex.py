@@ -30,7 +30,7 @@ class PoloniexPublic(object):
         """Returns the ticker for all markets."""
         return self._public('returnTicker')
 
-    def return24Volume(self):
+    def return24hVolume(self):
         """Returns the 24-hour volume for all markets, plus totals for
         primary currencies."""
         return self._public('return24hVolume')
