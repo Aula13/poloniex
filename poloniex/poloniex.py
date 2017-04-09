@@ -20,8 +20,14 @@ class PoloniexPublic(object):
         self._public_session = _requests.Session()
         self._semaphore = _threading.Semaphore(limit)
 
+    @staticmethod
+    def _sanitize_parameters(params):
+        """Sanitize the params removing none values."""
+        return {key: val for key, val in params.items() if val is not None}
+
     def _public(self, command, **params):
         """Invoke the 'command' public API with optional params."""
+        params = self._sanitize_parameters(params)
         params['command'] = command
         response = self._public_session.get(self._public_url, params=params)
         return response.json(object_hook=AutoCastDict)
