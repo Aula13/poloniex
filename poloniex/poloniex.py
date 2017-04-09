@@ -1,3 +1,4 @@
+import time
 import requests as _requests
 import functools as _functools
 import threading as _threading
@@ -34,6 +35,40 @@ class PoloniexPublic(object):
         """Returns the 24-hour volume for all markets, plus totals for
         primary currencies."""
         return self._public('return24hVolume')
+
+    def returnOrderBook(self, currencyPair='all', depth='50'):
+        """Returns the order book for a given market, as well as a sequence
+        number for use with the Push API and an indicator specifying whether
+        the market is frozen. You may set currencyPair to "all" to get the
+        order books of all markets."""
+        return self._public('returnOrderBook', currencyPair=currencyPair,
+                            depth=depth)
+
+    def returnTradeHistory(self, currencyPair, start=None, end=None):
+        """Returns the past 200 trades for a given market, or up to 50,000
+        trades between a range specified in UNIX timestamps by the "start"
+        and "end" GET parameters."""
+        return self._public('returnTradeHistory', currencyPair=currencyPair,
+                            start=start, end=end)
+
+    def returnChartData(self, currencyPair, period, start, end):
+        """Returns candlestick chart data. Required GET parameters are
+        "currencyPair", "period" (candlestick period in seconds; valid values
+        are 300, 900, 1800, 7200, 14400, and 86400), "start", and "end".
+        "Start" and "end" are given in UNIX timestamp format and used to
+        specify the date range for the data returned."""
+        return self._public('returnChartData', currencyPair=currencyPair,
+                            period=period, start=start, end=end)
+
+    def returnCurrencies(self):
+        """Returns information about currencies."""
+        return self._public('returnCurrencies')
+
+
+    def returnLoanOrders(self, currency):
+        """Returns the list of loan offers and demands for a given currency,
+        specified by the "currency" GET parameter."""
+        return self._public('returnLoanOrders', currency=currency)
 
 
 class Poloniex(PoloniexPublic):
