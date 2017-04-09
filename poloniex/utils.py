@@ -1,4 +1,4 @@
-import json as _json
+import ast as _ast
 import collections as _collections
 
 
@@ -11,8 +11,8 @@ class AutoCastDict(_collections.Mapping):
 
     def __getitem__(self, key):
         value = self.__dict[key]
-        try: return _json.loads(value)
-        except ValueError: return value
+        try: return _ast.literal_eval(value)
+        except ValueError, SyntaxError: return value
 
     def __str__(self):
         items = ('{!r}: {!r}'.format(*it) for it in self.iteritems())
