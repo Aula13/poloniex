@@ -1,5 +1,9 @@
+import hmac as _hmac
+import time as _time
+import hashlib as _hashlib
 import requests as _requests
 import functools as _functools
+import itertools as _itertools
 import threading as _threading
 
 from .utils import AutoCastDict
@@ -79,24 +83,39 @@ class Poloniex(PoloniexPublic):
 
     """Client to connect to Poloniex private APIs."""
 
+    class _PoloniexAuth(_requests.auth.AuthBase):
+
+        """Poloniex Request Authentication."""
+
+        def __init__(self, secret):
+            self._secret = secret
+
+        def __call__(self, request):
+            signature = _hmac.new(self._secret, request.body, _hashlib.sha512)
+            request.headers['Sign'] = signature.hexdigest()
+            print request.headers
+            return request
+
+
     def __init__(self, apikey=None, secret=None, public_url=_PUBLIC_URL,
                  private_url=_PRIVATE_URL, limit=6):
-        """Initialize the Poloniex private client.
-
-        :apikey: API key provide by Poloniex
-        :secret: secret for the API key
-
-        """
+        """Initialize the Poloniex private client."""
         PoloniexPublic.__init__(self, public_url, limit)
         self._private_url = private_url
         self._private_session = _requests.Session()
-        self._apikey = apikey
+        self._private_session.headers['Key'] = self._apikey = apikey
         self._secret = secret
+        self._nonces = _itertools.count(int(_time.time() * 1000))
 
-    def _private(self, command, **params):
+    def _private(self, method, command, **params):
         """Invoke the 'command' public API with optional params."""
-        params['command'] = command
-        if self._apikey and self._secretkey:
-            raise NotImplementedError('private API are not yet implemented')
-        raise PoloniexCredentialsException('credentials needed for private API')
+        if not self._apikey or not self._secret:
+            raise PoloniexCredentialsException('missing apikey/secret')
 
+        params = self._sanitize_parameters(params)
+        params.update({'command': command, 'nonce': next(self._nonces)})
+        response = self._private_session.request(method, self._private_url,
+                params=params, auth=Poloniex._PoloniexAuth(self._secret))
+        print response.status_code
+        print response.content
+        return response.json(object_hook=AutoCastDict)
