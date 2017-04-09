@@ -1,4 +1,3 @@
-import time
 import requests as _requests
 import functools as _functools
 import threading as _threading
@@ -64,7 +63,6 @@ class PoloniexPublic(object):
         """Returns information about currencies."""
         return self._public('returnCurrencies')
 
-
     def returnLoanOrders(self, currency):
         """Returns the list of loan offers and demands for a given currency,
         specified by the "currency" GET parameter."""
@@ -95,3 +93,4 @@ class Poloniex(PoloniexPublic):
         if self._apikey and self._secretkey:
             raise NotImplementedError('private API are not yet implemented')
         raise PoloniexCredentialsException('credentials needed for private API')
+
