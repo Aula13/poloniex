@@ -1,4 +1,4 @@
-import ast as _ast
+import json as _json
 import collections as _collections
 
 
@@ -11,7 +11,7 @@ class AutoCastDict(_collections.Mapping):
 
     def __getitem__(self, key):
         value = self.__dict[key]
-        try: return _ast.literal_eval(value)
+        try: return _json.loads(value)
         except ValueError: return value
 
     def __str__(self):
