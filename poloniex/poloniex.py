@@ -160,3 +160,9 @@ class Poloniex(PoloniexPublic):
         be limited to one day."""
         return self._private('returnTradeHistory', currencyPair=currencyPair,
                              start=start, end=end)
+
+    def returnTradeHistoryPublic(self, currencyPair, start=None, end=None):
+        """Returns the past 200 trades for a given market, or up to 50,000
+        trades between a range specified in UNIX timestamps by the "start"
+        and "end" GET parameters."""
+        PoloniexPublic.returnTradeHistory(self, currencyPair, start, end)
