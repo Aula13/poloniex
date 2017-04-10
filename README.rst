@@ -6,7 +6,7 @@ poloniex
 Description
 -----------
 
-Alpha version of Poloniex API client for humans
+Alpha version of a `Poloniex API`_ client for humans
 
 Installation
 ------------
@@ -17,3 +17,4 @@ The package has been uploaded to `PyPI`_, so you can install it with pip:
 
 
 .. _PyPI: https://pypi.python.org/pypi/poloniex
+.. _Poloniex API: https://poloniex.com/support/api/
