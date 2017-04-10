@@ -134,5 +134,7 @@ class Poloniex(PoloniexPublic):
 
     def generateNewAddress(self, currency):
         """Generates a new deposit address for the currency specified by the
-        "currency" POST parameter."""
+        "currency" POST parameter. Only one address per currency per day may be
+        generated, and a new address may not be generated before the
+        previously-generated one has been used."""
         return self._private('generateNewAddress', currency=currency)
