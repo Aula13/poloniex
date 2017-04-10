@@ -116,3 +116,7 @@ class Poloniex(PoloniexPublic):
         response = self._private_session.post(self._private_url,
                 data=params, auth=Poloniex._PoloniexAuth(self._secret))
         return response.json(object_hook=AutoCastDict)
+
+    def returnBalances(self):
+        """Returns all of your available balances."""
+        return self._private('returnBalances')
