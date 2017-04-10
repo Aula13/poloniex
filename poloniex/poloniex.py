@@ -144,3 +144,9 @@ class Poloniex(PoloniexPublic):
         specified by the "start" and "end" POST parameters, both of which
         should be given as UNIX timestamps."""
         return self._private('returnDepositsWithdrawals', start=start, end=end)
+
+    def returnOpenOrders(self, currencyPair='all'):
+        """Returns your open orders for a given market, specified by the
+        "currencyPair" POST parameter, e.g. "BTC_XCP". Set "currencyPair" to
+        "all" to return open orders for all markets."""
+        return self._private('returnOpenOrders', currencyPair=currencyPair)
