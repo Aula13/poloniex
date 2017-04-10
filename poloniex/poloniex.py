@@ -127,3 +127,7 @@ class Poloniex(PoloniexPublic):
         this call is limited to your exchange account; set the "account" POST
         parameter to "all" to include your margin and lending accounts."""
         return self._private('returnCompleteBalances', account=account)
+
+    def returnDepositAddresses(self):
+        """Returns all of your deposit addresses."""
+        return self._private('returnDepositAddresses')
