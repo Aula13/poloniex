@@ -166,11 +166,41 @@ class Poloniex(PoloniexPublic):
         and "end" GET parameters."""
         PoloniexPublic.returnTradeHistory(self, currencyPair, start, end)
 
+    def closeMarginPosition(self, currencyPair):
+        """Closes your margin position in a given market (specified by the
+        "currencyPair" POST parameter) using a market order. This call will
+        also return success if you do not have an open position in the
+        specified market."""
+        return self._private('closeMarginPosition', currencyPair=currencyPair)
+
+    def createLoanOffer(self, currency, amount, duration, autoRenew,
+                        lendingRate):
+        """Creates a loan offer for a given currency. Required POST parameters
+        are "currency", "amount", "duration", "autoRenew" (0 or 1), and
+        "lendingRate". """
+        return self._private('createLoanOffer', currency=currency,
+                             amount=amount, duration=duration,
+                             autoRenew=autoRenew, lendingRate=lendingRate)
+
+    def cancelLoanOffer(self, orderNumber):
+        """Cancels a loan offer specified by the "orderNumber" POST
+        parameter."""
+        return self._private('cancelLoanOffer', orderNumber=orderNumber)
+
+    def returnOpenLoanOffers(self):
+        """Returns your open loan offers for each currency. """
+        return self._private('returnOpenLoanOffers')
+
+    def returnActiveLoans(self):
+        """Returns your active loans for each currency."""
+        return self._private('returnActiveLoans')
+
     def returnLendingHistory(self, start, stop, limit=None):
         """Returns your lending history within a time range specified by the
         "start" and "end" POST parameters as UNIX timestamps. "limit" may also
         be specified to limit the number of rows returned. """
-        return self._private('returnLendingHistory', start=start, stop=stop, limit=limit)
+        return self._private('returnLendingHistory', start=start, stop=stop,
+                             limit=limit)
 
     def toggleAutoRenew(self, orderNumber):
         """Toggles the autoRenew setting on an active loan, specified by the
