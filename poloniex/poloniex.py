@@ -95,7 +95,6 @@ class Poloniex(PoloniexPublic):
             request.headers['Sign'] = signature.hexdigest()
             return request
 
-
     def __init__(self, apikey=None, secret=None, public_url=_PUBLIC_URL,
                  private_url=_PRIVATE_URL, limit=6):
         """Initialize the Poloniex private client."""
@@ -114,7 +113,7 @@ class Poloniex(PoloniexPublic):
         params = self._sanitize_parameters(params)
         params.update({'command': command, 'nonce': next(self._nonces)})
         response = self._private_session.post(self._private_url,
-                data=params, auth=Poloniex._PoloniexAuth(self._secret))
+                                              data=params, auth=Poloniex._PoloniexAuth(self._secret))
         return response.json(object_hook=AutoCastDict)
 
     def returnBalances(self):
@@ -166,3 +165,15 @@ class Poloniex(PoloniexPublic):
         trades between a range specified in UNIX timestamps by the "start"
         and "end" GET parameters."""
         PoloniexPublic.returnTradeHistory(self, currencyPair, start, end)
+
+    def returnLendingHistory(self, start, stop, limit=None):
+        """Returns your lending history within a time range specified by the
+        "start" and "end" POST parameters as UNIX timestamps. "limit" may also
+        be specified to limit the number of rows returned. """
+        return self._private('returnLendingHistory', start=start, stop=stop, limit=limit)
+
+    def toggleAutoRenew(self, orderNumber):
+        """Toggles the autoRenew setting on an active loan, specified by the
+        "orderNumber" POST parameter. If successful, "message" will indicate
+        the new autoRenew setting. """
+        return self._private('toggleAutoRenew', orderNumber=orderNumber)
