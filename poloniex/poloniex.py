@@ -131,3 +131,8 @@ class Poloniex(PoloniexPublic):
     def returnDepositAddresses(self):
         """Returns all of your deposit addresses."""
         return self._private('returnDepositAddresses')
+
+    def generateNewAddress(self, currency):
+        """Generates a new deposit address for the currency specified by the
+        "currency" POST parameter."""
+        return self._private('generateNewAddress', currency=currency)
