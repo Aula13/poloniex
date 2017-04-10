@@ -6,12 +6,33 @@ import functools as _functools
 import itertools as _itertools
 import threading as _threading
 
-from .utils import AutoCastDict, raise_on_error
+from .utils import AutoCastDict as _AutoCastDict
 from .exceptions import *
 
 
 _PUBLIC_URL = 'https://poloniex.com/public'
 _PRIVATE_URL = 'https://poloniex.com/tradingApi'
+
+
+def _api_wrapper(fn):
+    """API function decorator that performs rate limiting and error checking."""
+
+    @_functools.wraps(fn)
+    def _fn(self, command, **params):
+        # sanitize the params by removing the None values
+        params = {key: val for key, val in params.items() if val is not None}
+
+        try:
+            self._semaphore.acquire()
+            resp = fn(self, command, **params).json(object_hook=_AutoCastDict)
+            if 'error' in resp:
+                raise PoloniexCommandException(resp['error'])
+            return resp
+
+        finally:
+            _threading.Timer(1.0, self._semaphore.release).start()
+
+    return _fn
 
 
 class PoloniexPublic(object):
@@ -24,18 +45,11 @@ class PoloniexPublic(object):
         self._public_session = _requests.Session()
         self._semaphore = _threading.Semaphore(limit)
 
-    @staticmethod
-    def _sanitize_parameters(params):
-        """Sanitize the params removing none values."""
-        return {key: val for key, val in params.items() if val is not None}
-
-    @raise_on_error
+    @_api_wrapper
     def _public(self, command, **params):
         """Invoke the 'command' public API with optional params."""
-        params = self._sanitize_parameters(params)
         params['command'] = command
-        response = self._public_session.get(self._public_url, params=params)
-        return response.json(object_hook=AutoCastDict)
+        return self._public_session.get(self._public_url, params=params)
 
     def returnTicker(self):
         """Returns the ticker for all markets."""
@@ -106,17 +120,15 @@ class Poloniex(PoloniexPublic):
         self._secret = secret
         self._nonces = _itertools.count(int(_time.time() * 1000))
 
-    @raise_on_error
+    @_api_wrapper
     def _private(self, command, **params):
         """Invoke the 'command' public API with optional params."""
         if not self._apikey or not self._secret:
             raise PoloniexCredentialsException('missing apikey/secret')
 
-        params = self._sanitize_parameters(params)
         params.update({'command': command, 'nonce': next(self._nonces)})
-        response = self._private_session.post(self._private_url,
-                                              data=params, auth=Poloniex._PoloniexAuth(self._secret))
-        return response.json(object_hook=AutoCastDict)
+        return self._private_session.post(self._private_url,
+                data=params, auth=Poloniex._PoloniexAuth(self._secret))
 
     def returnBalances(self):
         """Returns all of your available balances."""
