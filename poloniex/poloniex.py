@@ -121,7 +121,7 @@ class Poloniex(PoloniexPublic):
         """Returns all of your available balances."""
         return self._private('returnBalances')
 
-    def returnCompleteBalances(self, account):
+    def returnCompleteBalances(self, account=None):
         """Returns all of your balances, including available balance, balance
         on orders, and the estimated BTC value of your balance. By default,
         this call is limited to your exchange account; set the "account" POST
