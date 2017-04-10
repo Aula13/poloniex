@@ -203,7 +203,7 @@ class Poloniex(PoloniexPublic):
         """Places a sell order in a given market. Parameters and output are
         the same as for the buy method."""
         if fillOrKill + immediateOrCancel + postOnly > 1:
-            raise PoloniexCredentialsException("""only one parameter between
+            raise PoloniexCredentialsException("""Only one parameter between
                                                fillOrKill, immediateOrCancel,
                                                postOnly allowed to be 1""")
 
