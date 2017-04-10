@@ -11,7 +11,7 @@ from .exceptions import *
 
 
 _PUBLIC_URL = 'https://poloniex.com/public'
-_PRIVATE_URL = 'https://poloniex.com/private'
+_PRIVATE_URL = 'https://poloniex.com/tradingApi'
 
 
 class PoloniexPublic(object):
