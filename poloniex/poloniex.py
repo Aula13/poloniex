@@ -150,3 +150,13 @@ class Poloniex(PoloniexPublic):
         "currencyPair" POST parameter, e.g. "BTC_XCP". Set "currencyPair" to
         "all" to return open orders for all markets."""
         return self._private('returnOpenOrders', currencyPair=currencyPair)
+
+    def returnTradeHistory(self, currencyPair='all', start=None, end=None):
+        """Returns your trade history for a given market, specified by the
+        "currencyPair" POST parameter. You may specify "all" as the
+        currencyPair to receive your trade history for all markets. You may
+        optionally specify a range via "start" and/or "end" POST parameters,
+        given in UNIX timestamp format; if you do not specify a range, it will
+        be limited to one day."""
+        return self._private('returnTradeHistory', currencyPair=currencyPair,
+                             start=start, end=end)
