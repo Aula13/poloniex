@@ -176,8 +176,8 @@ class Poloniex(PoloniexPublic):
     def buy(self, currencyPair, rate, amount, fillOrKill=None,
             immediateOrCancel=None, postOnly=None):
         """Places a limit buy order in a given market. Required POST parameters
-         are "currencyPair", "rate", and "amount". If successful, the method
-         will return the order number.
+        are "currencyPair", "rate", and "amount". If successful, the method
+        will return the order number.
         You may optionally set "fillOrKill", "immediateOrCancel", "postOnly"
         to 1. A fill-or-kill order will either fill in its entirety or be
         completely aborted. An immediate-or-cancel order can be partially or
