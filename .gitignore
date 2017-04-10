@@ -64,3 +64,6 @@ target/
 
 # test file
 test.py
+
+# virtualenv
+venv/
