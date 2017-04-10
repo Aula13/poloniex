@@ -1,6 +1,7 @@
 import hmac as _hmac
 import time as _time
 import hashlib as _hashlib
+import weakref as _weakref
 import requests as _requests
 import functools as _functools
 import itertools as _itertools
@@ -30,7 +31,10 @@ def _api_wrapper(fn):
             return resp
 
         finally:
-            _threading.Timer(1.0, self._semaphore.release).start()
+            timer = _threading.Timer(1.0, self._semaphore.release)
+            timer.setDaemon(True)
+            timer.start()
+            self._timers.add(timer)
 
     return _fn
 
@@ -44,6 +48,12 @@ class PoloniexPublic(object):
         self._public_url = public_url
         self._public_session = _requests.Session()
         self._semaphore = _threading.Semaphore(limit)
+        self._timers = _weakref.WeakSet()
+
+    def __del__(self):
+        for timer in self._timers:
+            timer.cancel()
+            timer.join()
 
     @_api_wrapper
     def _public(self, command, **params):
