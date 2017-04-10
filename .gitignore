@@ -60,6 +60,7 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+.ipynb
 
 # test file
 test.py
