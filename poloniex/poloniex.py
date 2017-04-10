@@ -138,3 +138,9 @@ class Poloniex(PoloniexPublic):
         generated, and a new address may not be generated before the
         previously-generated one has been used."""
         return self._private('generateNewAddress', currency=currency)
+
+    def returnDepositsWithdrawals(self, start, end):
+        """Returns your deposit and withdrawal history within a range,
+        specified by the "start" and "end" POST parameters, both of which
+        should be given as UNIX timestamps."""
+        return self._private('returnDepositsWithdrawals', start=start, end=end)
