@@ -8,8 +8,9 @@ import itertools as _itertools
 import threading as _threading
 
 from .utils import AutoCastDict as _AutoCastDict
-from .exceptions import *
-
+from .exceptions import (PoloniexCredentialsException,
+                         PoloniexCommandException,
+                         PoloniexInvalidParametersException)
 
 _PUBLIC_URL = 'https://poloniex.com/public'
 _PRIVATE_URL = 'https://poloniex.com/tradingApi'
@@ -138,7 +139,7 @@ class Poloniex(PoloniexPublic):
 
         params.update({'command': command, 'nonce': next(self._nonces)})
         return self._private_session.post(self._private_url,
-                data=params, auth=Poloniex._PoloniexAuth(self._secret))
+                                          data=params, auth=Poloniex._PoloniexAuth(self._secret))
 
     def returnBalances(self):
         """Returns all of your available balances."""
@@ -211,9 +212,9 @@ class Poloniex(PoloniexPublic):
         immediately; this guarantees you will never pay the taker fee on any
         part of the order that fills."""
         if fillOrKill + immediateOrCancel + postOnly > 1:
-            raise PoloniexCredentialsException("""only one parameter between
-                                               fillOrKill, immediateOrCancel,
-                                               postOnly allowed to be 1""")
+            raise PoloniexInvalidParametersException("""Only one parameter
+                    between fillOrKill, immediateOrCancel, postOnly allowed
+                    to be 1""")
 
         return self._private('buy', currencyPair=currencyPair, tare=rate,
                              amount=amount, fillOrKill=fillOrKill,
@@ -225,9 +226,9 @@ class Poloniex(PoloniexPublic):
         """Places a sell order in a given market. Parameters and output are
         the same as for the buy method."""
         if fillOrKill + immediateOrCancel + postOnly > 1:
-            raise PoloniexCredentialsException("""Only one parameter between
-                                               fillOrKill, immediateOrCancel,
-                                               postOnly allowed to be 1""")
+            raise PoloniexInvalidParametersException("""Only one parameter
+                    between fillOrKill, immediateOrCancel, postOnly allowed
+                    to be 1""")
 
         return self._private('sell', currencyPair=currencyPair, tare=rate,
                              amount=amount, fillOrKill=fillOrKill,
