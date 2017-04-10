@@ -93,7 +93,6 @@ class Poloniex(PoloniexPublic):
         def __call__(self, request):
             signature = _hmac.new(self._secret, request.body, _hashlib.sha512)
             request.headers['Sign'] = signature.hexdigest()
-            print request.headers
             return request
 
 
@@ -107,15 +106,13 @@ class Poloniex(PoloniexPublic):
         self._secret = secret
         self._nonces = _itertools.count(int(_time.time() * 1000))
 
-    def _private(self, method, command, **params):
+    def _private(self, command, **params):
         """Invoke the 'command' public API with optional params."""
         if not self._apikey or not self._secret:
             raise PoloniexCredentialsException('missing apikey/secret')
 
         params = self._sanitize_parameters(params)
         params.update({'command': command, 'nonce': next(self._nonces)})
-        response = self._private_session.request(method, self._private_url,
-                params=params, auth=Poloniex._PoloniexAuth(self._secret))
-        print response.status_code
-        print response.content
+        response = self._private_session.post(self._private_url,
+                data=params, auth=Poloniex._PoloniexAuth(self._secret))
         return response.json(object_hook=AutoCastDict)
