@@ -3,7 +3,11 @@ class PoloniexException(Exception):
     pass
 
 class PoloniexCredentialsException(PoloniexException, RuntimeError):
-    """Missing or wrong credentials while using Private API."""
+    """Missing or wrong credentials while using Trading API."""
+    pass
+
+class PoloniexCommandException(PoloniexException, RuntimeError):
+    """Error in command execution."""
     pass
 
 class PoloniexInvalidParametersException(PoloniexException, RuntimeError):

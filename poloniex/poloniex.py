@@ -6,7 +6,7 @@ import functools as _functools
 import itertools as _itertools
 import threading as _threading
 
-from .utils import AutoCastDict
+from .utils import AutoCastDict, raise_on_error
 from .exceptions import *
 
 
@@ -29,6 +29,7 @@ class PoloniexPublic(object):
         """Sanitize the params removing none values."""
         return {key: val for key, val in params.items() if val is not None}
 
+    @raise_on_error
     def _public(self, command, **params):
         """Invoke the 'command' public API with optional params."""
         params = self._sanitize_parameters(params)
@@ -105,6 +106,7 @@ class Poloniex(PoloniexPublic):
         self._secret = secret
         self._nonces = _itertools.count(int(_time.time() * 1000))
 
+    @raise_on_error
     def _private(self, command, **params):
         """Invoke the 'command' public API with optional params."""
         if not self._apikey or not self._secret:

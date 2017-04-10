@@ -1,5 +1,8 @@
 import ast as _ast
+import functools as _functools
 import collections as _collections
+
+from .exceptions import PoloniexCommandException
 
 
 class AutoCastDict(_collections.Mapping):
@@ -27,3 +30,16 @@ class AutoCastDict(_collections.Mapping):
 
     def __len__(self):
         return len(self.__dict)
+
+
+def raise_on_error(fn):
+    """decorator that raises PoloniexCommandException if there is an error."""
+
+    @_functools.wraps(fn)
+    def _fn(*args, **kwargs):
+        response = fn(*args, **kwargs)
+        if 'error' in response:
+            raise PoloniexCommandException(response['error'])
+        return response
+
+    return _fn
