@@ -166,14 +166,15 @@ class Poloniex(PoloniexPublic):
         and "end" GET parameters."""
         PoloniexPublic.returnTradeHistory(self, currencyPair, start, end)
 
-    def returnOrderTrades(self):
+    def returnOrderTrades(self, orderNumber):
         """Returns all trades involving a given order, specified by the
         "orderNumber" POST parameter. If no trades for the order have occurred
         or you specify an order that does not belong to you, you will receive
         an error. """
-        raise NotImplementedError
+        return self._private('returnOrderTrades', orderNumber=orderNumber)
 
-    def buy(self):
+    def buy(self, currencyPair, rate, amount, fillOrKill=None,
+            immediateOrCancel=None, postOnly=None):
         """Places a limit buy order in a given market. Required POST parameters
          are "currencyPair", "rate", and "amount". If successful, the method
          will return the order number.
@@ -185,80 +186,104 @@ class Poloniex(PoloniexPublic):
         A post-only order will only be placed if no portion of it fills
         immediately; this guarantees you will never pay the taker fee on any
         part of the order that fills."""
-        raise NotImplementedError
+        if fillOrKill + immediateOrCancel + postOnly > 1:
+            raise PoloniexCredentialsException("""only one parameter between
+                                               fillOrKill, immediateOrCancel,
+                                               postOnly allowed to be 1""")
 
-    def sell(self):
+        return self._private('buy', currencyPair=currencyPair, tare=rate,
+                             amount=amount, fillOrKill=fillOrKill,
+                             immediateOrCancel=immediateOrCancel,
+                             postOnly=postOnly)
+
+    def sell(self, currencyPair, rate, amount, fillOrKill=None,
+             immediateOrCancel=None, postOnly=None):
         """Places a sell order in a given market. Parameters and output are
         the same as for the buy method."""
-        raise NotImplementedError
+        if fillOrKill + immediateOrCancel + postOnly > 1:
+            raise PoloniexCredentialsException("""only one parameter between
+                                               fillOrKill, immediateOrCancel,
+                                               postOnly allowed to be 1""")
 
-    def cancelOrder(self):
+        return self._private('sell', currencyPair=currencyPair, tare=rate,
+                             amount=amount, fillOrKill=fillOrKill,
+                             immediateOrCancel=immediateOrCancel,
+                             postOnly=postOnly)
+
+    def cancelOrder(self, orderNumber):
         """Cancels an order you have placed in a given market. Required POST
         parameter is "orderNumber"."""
-        return
+        return self._private('cancelOrder', orderNumber=orderNumber)
 
-    def moveOrder(self):
+    def moveOrder(self, orderNumber, rate, amount=None, postOnly=None,
+                  immediateOrCancel=None):
         """Cancels an order and places a new one of the same type in a single
         atomic transaction, meaning either both operations will succeed or both
          will fail. Required POST parameters are "orderNumber" and "rate"; you
          may optionally specify "amount" if you wish to change the amount of
          the new order. "postOnly" or "immediateOrCancel" may be specified for
          exchange orders, but will have no effect on margin orders. """
-        raise NotImplementedError
+        return self._private('moveOrder', orderNumber=orderNumber, rate=rate,
+                             amount=amount, postOnly=postOnly,
+                             immediateOrCancel=immediateOrCancel)
 
-    def withdraw(self):
+    def withdraw(self, currency, amount, address, paymentId=None):
         """Immediately places a withdrawal for a given currency, with no email
         confirmation. In order to use this method, the withdrawal privilege
         must be enabled for your API key. Required POST parameters are
         "currency", "amount", and "address". For XMR withdrawals, you may
         optionally specify "paymentId"."""
-        raise NotImplementedError
+        return self._private('withdraw', currency=currency, amount=amount,
+                             address=address, paymentId=paymentId)
 
     def returnFeeInfo(self):
         """If you are enrolled in the maker-taker fee schedule, returns your
         current trading fees and trailing 30-day volume in BTC. This
         information is updated once every 24 hours."""
-        raise NotImplementedError
+        return self._private('returnFeeInfo')
 
-    def returnAvailableAccountBalances(self):
+    def returnAvailableAccountBalances(self, account=None):
         """Returns your balances sorted by account. You may optionally specify
         the "account" POST parameter if you wish to fetch only the balances of
         one account. Please note that balances in your margin account may not
         be accessible if you have any open margin positions or orders."""
-        raise NotImplementedError
+        return self._private('returnAvailableAccountBalances', account=account)
 
     def returnTradableBalances(self):
         """Returns your current tradable balances for each currency in each
         market for which margin trading is enabled. Please note that these
         balances may vary continually with market conditions."""
-        raise NotImplementedError
+        return self._private('returnTradableBalances')
 
-    def transferBalance(self):
+    def transferBalance(self, currency, amount, fromAccount, toAccount):
         """Transfers funds from one account to another (e.g. from your exchange
          account to your margin account). Required POST parameters are
          "currency", "amount", "fromAccount", and "toAccount"."""
-        raise NotImplementedError
+        return self._private('transferBalance', currency=currency,
+                             amount=amount, fromAccount=fromAccount,
+                             toAccount=toAccount)
 
     def returnMarginAccountSummary(self):
         """Returns a summary of your entire margin account. This is the same
         information you will find in the Margin Account section of the Margin
         Trading page, under the Markets list. """
-        raise NotImplementedError
+        return self._private('returnMarginAccountSummary')
 
-    def marginBuy(self):
+    def marginBuy(self, currencyPair, rate, amount, lendingRate=None):
         """Places a margin buy order in a given market. Required POST
         parameters are "currencyPair", "rate", and "amount". You may optionally
          specify a maximum lending rate using the "lendingRate" parameter.
          If successful, the method will return the order number and any trades
          immediately resulting from your order."""
-        raise NotImplementedError
+        return self._private('marginBuy', currencyPair=currencyPair, rate=rate,
+                             amount=amount, lendingRate=lendingRate)
 
     def marginSell(self):
         """Places a margin sell order in a given market. Parameters and output
         are the same as for the marginBuy method."""
-        raise NotImplementedError
+        return self._private('marginSell')
 
-    def getMarginPosition(self):
+    def getMarginPosition(self, currencyPair):
         """Returns information about your margin position in a given market,
         specified by the "currencyPair" POST parameter. You may set
         "currencyPair" to "all" if you wish to fetch all of your margin
@@ -267,7 +292,7 @@ class Poloniex(PoloniexPublic):
         estimate, and does not necessarily represent the price at which an
         actual forced liquidation will occur. If you have no liquidation
         price, the value will be -1. """
-        raise NotImplementedError
+        return self._private('getMarginPosition', currencyPair=currencyPair)
 
     def closeMarginPosition(self, currencyPair):
         """Closes your margin position in a given market (specified by the
