@@ -10,8 +10,7 @@ import threading as _threading
 
 from .utils import AutoCastDict as _AutoCastDict
 from .exceptions import (PoloniexCredentialsException,
-                         PoloniexCommandException,
-                         PoloniexInvalidParametersException)
+                         PoloniexCommandException)
 
 _PUBLIC_URL = 'https://poloniex.com/public'
 _PRIVATE_URL = 'https://poloniex.com/tradingApi'
@@ -229,11 +228,6 @@ class Poloniex(PoloniexPublic):
         A post-only order will only be placed if no portion of it fills
         immediately; this guarantees you will never pay the taker fee on any
         part of the order that fills."""
-        if fillOrKill + immediateOrCancel + postOnly > 1:
-            raise PoloniexInvalidParametersException("""Only one parameter
-                    between fillOrKill, immediateOrCancel, postOnly allowed
-                    to be 1""")
-
         return self._private('buy', currencyPair=currencyPair, tare=rate,
                              amount=amount, fillOrKill=fillOrKill,
                              immediateOrCancel=immediateOrCancel,
@@ -243,11 +237,6 @@ class Poloniex(PoloniexPublic):
              immediateOrCancel=None, postOnly=None):
         """Places a sell order in a given market. Parameters and output are
         the same as for the buy method."""
-        if fillOrKill + immediateOrCancel + postOnly > 1:
-            raise PoloniexInvalidParametersException("""Only one parameter
-                    between fillOrKill, immediateOrCancel, postOnly allowed
-                    to be 1""")
-
         return self._private('sell', currencyPair=currencyPair, tare=rate,
                              amount=amount, fillOrKill=fillOrKill,
                              immediateOrCancel=immediateOrCancel,
