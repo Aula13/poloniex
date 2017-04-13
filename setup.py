@@ -13,6 +13,8 @@ setup(name='poloniex',
       author_email='enrico.bacis@gmail.com, ciriello.daniele@gmail.com',
       license='MIT',
       packages=['poloniex'],
+      setup_requires=['pytest-runner'],
       install_requires=['requests'],
+      tests_require=['pytest', 'responses'],
       keywords='poloniex cryptocurrency cryptocurrencies api client bitcoin'
 )
