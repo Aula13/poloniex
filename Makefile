@@ -18,4 +18,4 @@ clean:
 	rm -rf $(VENV)
 
 $(VENV):
-	virtualenv -p python3 $(VENV)
+	virtualenv $(VENV)
