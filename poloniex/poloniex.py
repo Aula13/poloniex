@@ -175,6 +175,18 @@ class Poloniex(PoloniexPublic):
         should be given as UNIX timestamps."""
         return self._private('returnDepositsWithdrawals', start=start, end=end)
 
+    def returnDeposits(self, start=0, end=2**32-1):
+        """Returns your deposit history within a range, specified by the
+        "start" and "end" POST parameters, both of which should be given as
+        UNIX timestamps."""
+        return self.returnDepositsWithdrawals(start, end)['deposits']
+
+    def returnWithdrawals(self, start=0, end=2**32-1):
+        """Returns your withdrawal history within a range, specified by the
+        "start" and "end" POST parameters, both of which should be given as
+        UNIX timestamps."""
+        return self.returnDepositsWithdrawals(start, end)['withdrawals']
+
     def returnOpenOrders(self, currencyPair='all'):
         """Returns your open orders for a given market, specified by the
         "currencyPair" POST parameter, e.g. "BTC_XCP". Set "currencyPair" to
