@@ -3,6 +3,9 @@ poloniex
 
 *Poloniex python API client for humans*
 
+.. image:: https://travis-ci.org/Aula13/poloniex.svg?branch=master
+    :target: https://travis-ci.org/Aula13/poloniex
+
 Description
 -----------
 
