@@ -1,8 +1,13 @@
 import ast as _ast
-import collections as _collections
+import six as _six
+
+try:
+    import collections.abc as _collections_abc       # only works on python 3.3+
+except ImportError:
+    import collections as _collections_abc
 
 
-class AutoCastDict(_collections.Mapping):
+class AutoCastDict(_collections_abc.Mapping):
 
     """Dictionary that automatically cast strings."""
 
@@ -17,7 +22,7 @@ class AutoCastDict(_collections.Mapping):
             return value
 
     def __str__(self):
-        items = ('{!r}: {!r}'.format(*it) for it in self.iteritems())
+        items = ('{!r}: {!r}'.format(*it) for it in _six.iteritems(self))
         return '{{{}}}'.format(', '.join(items))
 
     __repr__ = __str__

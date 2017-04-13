@@ -14,7 +14,7 @@ setup(name='poloniex',
       license='MIT',
       packages=['poloniex'],
       setup_requires=['pytest-runner'],
-      install_requires=['requests'],
+      install_requires=['requests', 'six'],
       tests_require=['pytest', 'responses'],
       keywords='poloniex cryptocurrency cryptocurrencies api client bitcoin'
 )

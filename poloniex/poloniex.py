@@ -1,3 +1,4 @@
+import six as _six
 import hmac as _hmac
 import time as _time
 import hashlib as _hashlib
@@ -27,7 +28,9 @@ def _api_wrapper(fn):
     @_functools.wraps(fn)
     def _fn(self, command, **params):
         # sanitize the params by removing the None values
-        params = {k: _convert(v) for k, v in params.items() if v is not None}
+        params = dict((key, _convert(value))
+                      for key, value in _six.iteritems(params)
+                      if value is not None)
 
         try:
             self._semaphore.acquire()
