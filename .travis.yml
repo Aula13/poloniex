@@ -1,9 +1,17 @@
 language: python
 python:
-  - "2.7"
-  - "3.3"
-  - "3.4"
-  - "3.5"
-  - "3.6"
-install: "python setup.py install"
-script: "python setup.py test"
+- '2.7'
+- '3.3'
+- '3.4'
+- '3.5'
+- '3.6'
+install: python setup.py install
+script: python setup.py test
+deploy:
+  provider: pypi
+  user: aula13
+  password:
+    secure: hBZRvCi4uG7LykhFham4twcp3iONxMRh2Q/cWGbqeKfwrSXikXkIkxb35WV0ok+FydbXiKTU5xoPn+HyRjUfLte2TGMVWwr7fUYc9i2wgpMbg2wV6inWAGgUOKiHtJzSlHsczRmykHheuS22GJs5cRM5aicr3UcSo8Zi5NIcvh1eGJEsaakLG25VApu3bfsm8XHaHHhss3gdKd0f68saZ1AXf9sQStFAIaOtUdLc45KdSByHRs6vEUuKFdKL/Zi9k0JUF43UBljRsTwRkDUjVHTxHNMtYRaAPp3+MHPlh2447r56b4DZ3I3i8j4fdv+IvcLaRxEp5aZR6C03sD/Ep+vN3v/v8sdJcozs1QXHK6vOw2oY12LsRxxIKdge+RpJ08ZdkKM3erfjejNySfQAC80UA33L3LDAGpBOkFvsYDbdmyGb8EhPot4HOYc0TTGO2SPUP4rY8g7nl3NmitS1UThHbuIBUHoBmLiB9YilJgjozf1c9JD8knOO+l+ioQXJ/kZkBMpI8e+ANZdziK84v0zear4oqMkEgv6Xqcnj71UiJfkR0W9juEMkXbbOIWHsC2PQQkWsW3ypsERZLbIn7DCVgWurBoDy5UQnf0bn9mU7fJeK/HvSLE47UAYYtR1lQ8cmR6tisVO0FX2D8c0QTr2sKVswhi3Xe/nYN4jYBc0=
+  on:
+    tags: true
+    branch: master
