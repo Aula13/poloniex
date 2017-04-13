@@ -92,7 +92,7 @@ class PoloniexPublic(object):
         return self._public('returnTradeHistory', currencyPair=currencyPair,
                             start=start, end=end)
 
-    def returnChartData(self, currencyPair, period, start, end):
+    def returnChartData(self, currencyPair, period, start=0, end=2**32-1):
         """Returns candlestick chart data. Required GET parameters are
         "currencyPair", "period" (candlestick period in seconds; valid values
         are 300, 900, 1800, 7200, 14400, and 86400), "start", and "end".
@@ -169,7 +169,7 @@ class Poloniex(PoloniexPublic):
         previously-generated one has been used."""
         return self._private('generateNewAddress', currency=currency)
 
-    def returnDepositsWithdrawals(self, start, end):
+    def returnDepositsWithdrawals(self, start=0, end=2**32-1):
         """Returns your deposit and withdrawal history within a range,
         specified by the "start" and "end" POST parameters, both of which
         should be given as UNIX timestamps."""
@@ -366,11 +366,11 @@ class Poloniex(PoloniexPublic):
         """Returns your active loans for each currency."""
         return self._private('returnActiveLoans')
 
-    def returnLendingHistory(self, start, stop, limit=None):
+    def returnLendingHistory(self, start=0, end=2**32-1, limit=None):
         """Returns your lending history within a time range specified by the
         "start" and "end" POST parameters as UNIX timestamps. "limit" may also
         be specified to limit the number of rows returned. """
-        return self._private('returnLendingHistory', start=start, stop=stop,
+        return self._private('returnLendingHistory', start=start, end=end,
                              limit=limit)
 
     def toggleAutoRenew(self, orderNumber):
