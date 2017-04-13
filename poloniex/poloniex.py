@@ -2,6 +2,7 @@ import hmac as _hmac
 import time as _time
 import hashlib as _hashlib
 import weakref as _weakref
+import datetime as _datetime
 import requests as _requests
 import functools as _functools
 import itertools as _itertools
@@ -19,10 +20,15 @@ _PRIVATE_URL = 'https://poloniex.com/tradingApi'
 def _api_wrapper(fn):
     """API function decorator that performs rate limiting and error checking."""
 
+    def _convert(value):
+        if isinstance(value, _datetime.date):
+            return value.strftime('%s')
+        return value
+
     @_functools.wraps(fn)
     def _fn(self, command, **params):
         # sanitize the params by removing the None values
-        params = {key: val for key, val in params.items() if val is not None}
+        params = {k: _convert(v) for k, v in params.items() if v is not None}
 
         try:
             self._semaphore.acquire()
