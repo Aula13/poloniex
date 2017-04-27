@@ -27,10 +27,7 @@ class PoloniexPush(_ApplicationSession):
         else:
             topic = unicode(self.config.extra['topic'])
 
-        try:
-            yield _From(self.subscribe(onTicker, topic))
-        except Exception as e:
-            print("Could not subscribe to topic: ", e)
+        yield _From(self.subscribe(onTicker, topic))
 
 
 class PushMain():
@@ -40,10 +37,6 @@ class PushMain():
     >> from wss_client import PushMain
     >> ticker_feed = PushMain()
     >> print(ticker_feed.feed())
-    or
-    >> from wss_client import PushMain
-    >> OrderBook_feed = PushMain('BTC_ETH')
-    >> print(OrderBook_feed.feed())
 
     You will need to implement it as thread / async function if you want your program to do anything other than
     spit out the websocket feed forever and ever - unfortunately beyond my limited expertise
@@ -62,7 +55,7 @@ def main():
         print("Order Book or Trade update received:", args, kwargs)
 
     runner = _ApplicationRunner(u"wss://api.poloniex.com:443", u"realm1",
-                                extra={'topic': 'BTC_ETH', 'onEvent': onOrderBookTrades})
+                                extra={'topic': 'ticker', 'onEvent': onOrderBookTrades})
 
     runner.run(PoloniexPush)
 
