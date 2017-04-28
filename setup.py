@@ -15,6 +15,6 @@ setup(name='poloniex',
       packages=['poloniex'],
       setup_requires=['pytest-runner'],
       install_requires=['requests', 'six'],
-      tests_require=['pytest', 'responses'],
+      tests_require=['pytest', 'responses', 'trollius', 'autobahn'],
       keywords='poloniex cryptocurrency cryptocurrencies api client bitcoin'
 )
