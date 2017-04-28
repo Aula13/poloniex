@@ -8,6 +8,9 @@ import requests as _requests
 import functools as _functools
 import itertools as _itertools
 import threading as _threading
+from trollius import coroutine as _coroutine, From as _From
+from autobahn.asyncio.wamp import ApplicationRunner as _ApplicationRunner
+from autobahn.asyncio.wamp import ApplicationSession as _ApplicationSession
 
 from .utils import AutoCastDict as _AutoCastDict
 from .exceptions import (PoloniexCredentialsException,
@@ -15,6 +18,7 @@ from .exceptions import (PoloniexCredentialsException,
 
 _PUBLIC_URL = 'https://poloniex.com/public'
 _PRIVATE_URL = 'https://poloniex.com/tradingApi'
+_WSS_URI = 'wss://api.poloniex.com:443'
 
 
 def _api_wrapper(fn):
@@ -48,6 +52,23 @@ def _api_wrapper(fn):
     return _fn
 
 
+class PushSession(_ApplicationSession):
+
+    """Client to connect to Poloniex Push APIs"""
+
+    def onConnect(self):
+        self.join(self.config.realm)
+
+    @_coroutine
+    def onJoin(self, details):
+        def onTicker(*args, **kwargs):
+            self.config.extra['backFunction'](args, kwargs)
+
+        feed = self.config.extra['feed']
+
+        yield _From(self.subscribe(onTicker, feed))
+
+
 class PoloniexPublic(object):
 
     """Client to connect to Poloniex public APIs"""
@@ -69,6 +90,23 @@ class PoloniexPublic(object):
         """Invoke the 'command' public API with optional params."""
         params['command'] = command
         return self._public_session.get(self._public_url, params=params)
+
+    def subscribe(self, feed, backFunction):
+        """Subscibe to the Poloniex Push APIs. feed can be either 'tikcer',
+        'trollbox', or any currency pair available on poloniex to obatin order
+        books events. backFunction will be called with *args, **kwargs as
+        parameters (kwargs wil be {} for 'trollbox' and 'ticker' feeds).
+
+        Keyword arguments:
+        feed -- the feed you want to subscribe to
+        backFunction -- the back function for the received events
+
+        FIXME: Should this funciton be static?"""
+
+        ufeed = _six.u(feed)
+        extra = {'feed': ufeed, 'backFunction': backFunction}
+        runner = _ApplicationRunner(_six.u(_WSS_URI), u"realm1", extra=extra)
+        return runner.run(PushSession)
 
     def returnTicker(self):
         """Returns the ticker for all markets."""
