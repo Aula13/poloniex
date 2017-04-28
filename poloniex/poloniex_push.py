@@ -17,9 +17,9 @@ class Session(_ApplicationSession):
         def onTicker(*args, **kwargs):
             self.config.extra['backFunction'](args, kwargs)
 
-        topic = _six.u(self.config.extra['topic'])
+        feed = self.config.extra['feed']
 
-        yield _From(self.subscribe(onTicker, topic))
+        yield _From(self.subscribe(onTicker, feed))
 
 
 class PoloniexPush():
@@ -31,12 +31,12 @@ class PoloniexPush():
     >> print(ticker_feed.feed())
     '''
 
-    def __init__(self, topic, backFunction):
-        self.topic = topic
+    def __init__(self, feed, backFunction):
+        self.feed = _six.u(feed)
         self.backFunction = backFunction
 
     def feed(self):
-        runner = _ApplicationRunner(u"wss://api.poloniex.com:443", u"realm1", extra={'topic': self.topic, 'backFunction': self.backFunction})
+        runner = _ApplicationRunner(u"wss://api.poloniex.com:443", u"realm1", extra={'feed': self.feed, 'backFunction': self.backFunction})
         return runner.run(Session)
 
 
@@ -48,7 +48,7 @@ def main():
         print("Event received:", args)
 
     runner = _ApplicationRunner(u"wss://api.poloniex.com:443", u"realm1",
-                                extra={'topic': 'ticker', 'backFunction': onTicker})
+                                extra={'feed': u'ticker', 'backFunction': onTicker})
 
     runner.run(Session)
 
