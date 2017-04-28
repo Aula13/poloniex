@@ -13,8 +13,7 @@ from autobahn.asyncio.wamp import ApplicationRunner as _ApplicationRunner
 from autobahn.asyncio.wamp import ApplicationSession as _ApplicationSession
 
 from .utils import AutoCastDict as _AutoCastDict
-from .exceptions import (PoloniexCredentialsException,
-                         PoloniexCommandException)
+from .exceptions import PoloniexCredentialsException, PoloniexCommandException
 
 _PUBLIC_URL = 'https://poloniex.com/public'
 _PRIVATE_URL = 'https://poloniex.com/tradingApi'
