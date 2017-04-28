@@ -1,6 +1,5 @@
 from __future__ import print_function
 
-import sys as _sys
 import six as _six
 
 from autobahn.asyncio.wamp import ApplicationSession as _ApplicationSession
