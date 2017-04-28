@@ -21,7 +21,7 @@ _WSS_URI = 'wss://api.poloniex.com:443'
 
 
 def _api_wrapper(fn):
-    """API function decorator that performs rate limiting and error checking."""
+    """API function decorator that performs rate limiting and error checking"""
 
     def _convert(value):
         if isinstance(value, _datetime.date):
@@ -188,7 +188,9 @@ class Poloniex(PoloniexPublic):
 
         params.update({'command': command, 'nonce': next(self._nonces)})
         return self._private_session.post(self._private_url,
-                                          data=params, auth=Poloniex._PoloniexAuth(self._secret))
+                                          data=params,
+                                          auth=Poloniex._PoloniexAuth(
+                                                                self._secret))
 
     def returnBalances(self):
         """Returns all of your available balances."""
