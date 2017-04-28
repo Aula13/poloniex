@@ -96,6 +96,10 @@ class PoloniexPublic(object):
         'trollbox', or any currency pair available on poloniex to obatin order
         books events. backFunction will be called with *args, **kwargs as
         parameters (kwargs wil be {} for 'trollbox' and 'ticker' feeds).
+        Ex.
+        >> def onOrderBookTrades(*args, **kwargs):
+        >>     print("Order Book or Trade update received:", args, kwargs)
+        >> Poloniex().subscribe('BTC_ETH', onTicker)
 
         Keyword arguments:
         feed -- the feed you want to subscribe to
