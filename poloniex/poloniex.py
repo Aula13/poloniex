@@ -231,7 +231,7 @@ class Poloniex(PoloniexPublic):
         A post-only order will only be placed if no portion of it fills
         immediately; this guarantees you will never pay the taker fee on any
         part of the order that fills."""
-        return self._private('buy', currencyPair=currencyPair, tare=rate,
+        return self._private('buy', currencyPair=currencyPair, rate=rate,
                              amount=amount, fillOrKill=fillOrKill,
                              immediateOrCancel=immediateOrCancel,
                              postOnly=postOnly)
@@ -240,7 +240,7 @@ class Poloniex(PoloniexPublic):
              immediateOrCancel=None, postOnly=None):
         """Places a sell order in a given market. Parameters and output are
         the same as for the buy method."""
-        return self._private('sell', currencyPair=currencyPair, tare=rate,
+        return self._private('sell', currencyPair=currencyPair, rate=rate,
                              amount=amount, fillOrKill=fillOrKill,
                              immediateOrCancel=immediateOrCancel,
                              postOnly=postOnly)
