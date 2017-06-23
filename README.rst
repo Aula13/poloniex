@@ -27,10 +27,6 @@ Donations
 
 We are now accepting donations! Check your favorite currency below for the relative wallet address, Thank you!
 
-.. image:: https://www.mememaker.net/static/images/memes/3630492.jpg
-    :alt: Donate Now!!!
-        :align: center
-
 =================  ======  ====== 
 Name               Symbol  Address 
 =================  ======  ====== 
@@ -44,7 +40,3 @@ Dash               DSH     Xv3V7Fy5ikHydiFwoFJkZaM11KfojcgG5B
 Golem              GNT     0x8f61777b0f951ed5df684da495d82171aa3645ea
 Gnosis             GNO     0x8f61777b0f951ed5df684da495d82171aa3645ea
 =================  ======  ======
-
-.. image:: http://s.quickmeme.com/img/4e/4e27d32b7e6d3382a631811c41415884de5edb7ecf666d83104d3a9bf1d911e7.jpg
-    :alt: What if I told you it wouldn't hurt your wallet to donate
-        :align: center
