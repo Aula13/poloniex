@@ -25,8 +25,6 @@ The package has been uploaded to `PyPI`_, so you can install it with pip:
 Donations
 ---------
 
-We are now accepting donations! Check your favorite currency below for the relative wallet address, Thank you!
-
 =================  ======  ====== 
 Name               Symbol  Address 
 =================  ======  ====== 
