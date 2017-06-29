@@ -14,55 +14,47 @@ Alpha version of a `Poloniex API`_ client for humans
 Installation
 ------------
 
-The package has been uploaded to `PyPI`_, so you can install it with pip:
+The package has been uploaded to `PyPI`_, so you can install it with pip::
 
-   ::
-
-      $pip install poloniex
+    $pip install poloniex
     
     
 Usage Examples
 -----
 
-Documentation can be inspected by calling the python's ``help`` function with a ``Poloniex`` object as parameter:
+Documentation can be inspected by calling the python's ``help`` function with a ``Poloniex`` object as parameter::
 
-   ::
-     
-     >>> from poloniex import Poloniex
-     >>> polo = Poloniex()
-     >>> help(polo)
+    >>> from poloniex import Poloniex
+    >>> polo = Poloniex()
+    >>> help(polo)
      
      
      
-**Public APIs:**
+**Public APIs:** ::
 
-   ::
-   
-     from poloniex import Poloniex
+    from poloniex import Poloniex
      
-     polo = Poloniex()
+    polo = Poloniex()
      
-     ticker = p.returnTicker()['BTC_ETH']
-     print(ticker)
+    ticker = p.returnTicker()['BTC_ETH']
+    print(ticker)
      
      
-**Private APIs:**
+**Private APIs:**::
 
-   ::
+    import os
+    from poloniex import Poloniex
      
-     import os
-     from poloniex import Poloniex
+    api_key = os.environ.get('POLONIEX_API_KEY')
+    api_secret = os.environ.get('POLONIEX_SECRET')
      
-     api_key = os.environ.get('POLONIEX_API_KEY')
-     api_secret = os.environ.get('POLONIEX_SECRET')
-     
-     polo = Poloniex(api_key, api_secret)
+    polo = Poloniex(api_key, api_secret)
           
-     ticker = p.returnTicker()['BTC_ETH']
-     print(ticker)
+    ticker = p.returnTicker()['BTC_ETH']
+    print(ticker)
      
-     balances = polo.returnBalances()
-     print(balances)
+    balances = polo.returnBalances()
+    print(balances)
 
 
 
