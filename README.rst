@@ -25,8 +25,6 @@ The package has been uploaded to `PyPI`_, so you can install it with pip:
 Donations
 ---------
 
-Donations are always appreciated!
-
 =================  ======  ====== 
 Name               Symbol  Address 
 =================  ======  ====== 
