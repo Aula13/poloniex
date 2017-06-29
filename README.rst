@@ -40,7 +40,7 @@ Documentation can be inspected by calling the python's ``help`` function with a 
     print(ticker)
      
      
-**Private APIs:**::
+**Private APIs:** ::
 
     import os
     from poloniex import Poloniex
