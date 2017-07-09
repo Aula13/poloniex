@@ -36,7 +36,7 @@ Documentation can be inspected by calling the python's ``help`` function with a 
      
     polo = Poloniex()
      
-    ticker = p.returnTicker()['BTC_ETH']
+    ticker = polo.returnTicker()['BTC_ETH']
     print(ticker)
      
      
@@ -50,7 +50,7 @@ Documentation can be inspected by calling the python's ``help`` function with a 
      
     polo = Poloniex(api_key, api_secret)
           
-    ticker = p.returnTicker()['BTC_ETH']
+    ticker = polo.returnTicker()['BTC_ETH']
     print(ticker)
      
     balances = polo.returnBalances()
