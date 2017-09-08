@@ -5,7 +5,6 @@ import hashlib as _hashlib
 import weakref as _weakref
 import datetime as _datetime
 import requests as _requests
-import functools as _functools
 import itertools as _itertools
 import threading as _threading
 
@@ -25,7 +24,7 @@ def _api_wrapper(fn):
             return value.strftime('%s')
         return value
 
-    @_functools.wraps(fn)
+    @_six.wraps(fn)
     def _fn(self, command, **params):
         # sanitize the params by removing the None values
         params = dict((key, _convert(value))
@@ -132,7 +131,7 @@ class Poloniex(PoloniexPublic):
     def __init__(self, apikey=None, secret=None, public_url=_PUBLIC_URL,
                  private_url=_PRIVATE_URL, limit=6):
         """Initialize the Poloniex private client."""
-        PoloniexPublic.__init__(self, public_url, limit)
+        super(Poloniex, self).__init__(public_url, limit, session_class)
         self._private_url = private_url
         self._private_session = _requests.Session()
         self._private_session.headers['Key'] = self._apikey = apikey
@@ -209,7 +208,7 @@ class Poloniex(PoloniexPublic):
         """Returns the past 200 trades for a given market, or up to 50,000
         trades between a range specified in UNIX timestamps by the "start"
         and "end" GET parameters."""
-        PoloniexPublic.returnTradeHistory(self, currencyPair, start, end)
+        return super(Poloniex, self).returnTradeHistory(currencyPair, start, end)
 
     def returnOrderTrades(self, orderNumber):
         """Returns all trades involving a given order, specified by the
