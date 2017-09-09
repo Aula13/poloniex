@@ -51,12 +51,14 @@ class PoloniexPublic(object):
 
     """Client to connect to Poloniex public APIs"""
 
-    def __init__(self, public_url=_PUBLIC_URL, limit=6):
+    def __init__(self, public_url=_PUBLIC_URL, limit=6,
+                 session_class=_requests.Session,
+                 session=None):
         """Initialize Poloniex client."""
         self._public_url = public_url
-        self._public_session = _requests.Session()
         self._semaphore = _threading.Semaphore(limit)
         self._timers = _weakref.WeakSet()
+        self.session = session or session_class()
 
     def __del__(self):
         for timer in self._timers:
@@ -67,7 +69,7 @@ class PoloniexPublic(object):
     def _public(self, command, **params):
         """Invoke the 'command' public API with optional params."""
         params['command'] = command
-        return self._public_session.get(self._public_url, params=params)
+        return self.session.get(self._public_url, params=params)
 
     def returnTicker(self):
         """Returns the ticker for all markets."""
@@ -120,21 +122,22 @@ class Poloniex(PoloniexPublic):
 
         """Poloniex Request Authentication."""
 
-        def __init__(self, secret):
-            self._secret = secret
+        def __init__(self, apikey, secret):
+            self._apikey, self._secret = apikey, secret
 
         def __call__(self, request):
             signature = _hmac.new(self._secret, request.body, _hashlib.sha512)
-            request.headers['Sign'] = signature.hexdigest()
+            request.headers.update({"Key": self._apikey,
+                                    "Sign": signature.hexdigest()})
             return request
 
-    def __init__(self, apikey=None, secret=None, public_url=_PUBLIC_URL,
-                 private_url=_PRIVATE_URL, limit=6):
+    def __init__(self, apikey=None, secret=None,
+                 public_url=_PUBLIC_URL, private_url=_PRIVATE_URL,
+                 limit=6, session_class=_requests.Session, session=None):
         """Initialize the Poloniex private client."""
-        super(Poloniex, self).__init__(public_url, limit, session_class)
+        super(Poloniex, self).__init__(public_url, limit, session_class, session)
         self._private_url = private_url
-        self._private_session = _requests.Session()
-        self._private_session.headers['Key'] = self._apikey = apikey
+        self._apikey = apikey
         self._secret = secret
         self._nonces = _itertools.count(int(_time.time() * 1000))
 
@@ -145,8 +148,9 @@ class Poloniex(PoloniexPublic):
             raise PoloniexCredentialsException('missing apikey/secret')
 
         params.update({'command': command, 'nonce': next(self._nonces)})
-        return self._private_session.post(self._private_url,
-                                          data=params, auth=Poloniex._PoloniexAuth(self._secret))
+        return self.session.post(
+            self._private_url, data=params,
+            auth=Poloniex._PoloniexAuth(self._apikey, self._secret))
 
     def returnBalances(self):
         """Returns all of your available balances."""
