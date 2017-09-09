@@ -133,13 +133,15 @@ class Poloniex(PoloniexPublic):
 
     def __init__(self, apikey=None, secret=None,
                  public_url=_PUBLIC_URL, private_url=_PRIVATE_URL,
-                 limit=6, session_class=_requests.Session, session=None):
+                 limit=6, session_class=_requests.Session, session=None,
+                 nonce_iter=None, nonce_lock=None):
         """Initialize the Poloniex private client."""
         super(Poloniex, self).__init__(public_url, limit, session_class, session)
         self._private_url = private_url
         self._apikey = apikey
         self._secret = secret
-        self._nonces = _itertools.count(int(_time.time() * 1000))
+        self.nonce_lock = nonce_lock or _threading.RLock()
+        self.nonce_iter = nonce_iter or _itertools.count(int(_time.time() * 1000))
 
     @_api_wrapper
     def _private(self, command, **params):
@@ -147,10 +149,11 @@ class Poloniex(PoloniexPublic):
         if not self._apikey or not self._secret:
             raise PoloniexCredentialsException('missing apikey/secret')
 
-        params.update({'command': command, 'nonce': next(self._nonces)})
-        return self.session.post(
-            self._private_url, data=params,
-            auth=Poloniex._PoloniexAuth(self._apikey, self._secret))
+        with self.nonce_lock:
+            params.update({'command': command, 'nonce': next(self.nonce_iter)})
+            return self.session.post(
+                self._private_url, data=params,
+                auth=Poloniex._PoloniexAuth(self._apikey, self._secret))
 
     def returnBalances(self):
         """Returns all of your available balances."""
