@@ -2,12 +2,12 @@ import six as _six
 import hmac as _hmac
 import time as _time
 import hashlib as _hashlib
-import weakref as _weakref
 import datetime as _datetime
 import requests as _requests
 import itertools as _itertools
 import threading as _threading
 
+from .concurrency import RecurrentTimer, Semaphore
 from .utils import AutoCastDict as _AutoCastDict
 from .exceptions import (PoloniexCredentialsException,
                          PoloniexCommandException)
@@ -27,22 +27,19 @@ def _api_wrapper(fn):
     @_six.wraps(fn)
     def _fn(self, command, **params):
         # sanitize the params by removing the None values
+        with self.startup_lock:
+            if self.timer.ident is None:
+                self.timer.setDaemon(True)
+                self.timer.start()
         params = dict((key, _convert(value))
                       for key, value in _six.iteritems(params)
                       if value is not None)
 
-        try:
-            self._semaphore.acquire()
-            resp = fn(self, command, **params).json(object_hook=_AutoCastDict)
-            if 'error' in resp:
-                raise PoloniexCommandException(resp['error'])
-            return resp
-
-        finally:
-            timer = _threading.Timer(1.0, self._semaphore.release)
-            timer.setDaemon(True)
-            timer.start()
-            self._timers.add(timer)
+        self.semaphore.acquire()
+        resp = fn(self, command, **params).json(object_hook=_AutoCastDict)
+        if 'error' in resp:
+            raise PoloniexCommandException(resp['error'])
+        return resp
 
     return _fn
 
@@ -53,17 +50,19 @@ class PoloniexPublic(object):
 
     def __init__(self, public_url=_PUBLIC_URL, limit=6,
                  session_class=_requests.Session,
-                 session=None):
+                 session=None, startup_lock=None,
+                 semaphore=None, timer=None):
         """Initialize Poloniex client."""
         self._public_url = public_url
-        self._semaphore = _threading.Semaphore(limit)
-        self._timers = _weakref.WeakSet()
+        self.startup_lock = startup_lock or _threading.RLock()
+        self.semaphore = semaphore or Semaphore(limit)
+        self.timer = timer or RecurrentTimer(1.0, self.semaphore.clear)
         self.session = session or session_class()
 
     def __del__(self):
-        for timer in self._timers:
-            timer.cancel()
-            timer.join()
+        self.timer.cancel()
+        if self.timer.ident is not None:  # timer was started
+            self.timer.join()
 
     @_api_wrapper
     def _public(self, command, **params):
@@ -132,11 +131,17 @@ class Poloniex(PoloniexPublic):
             return request
 
     def __init__(self, apikey=None, secret=None,
-                 public_url=_PUBLIC_URL, private_url=_PRIVATE_URL,
-                 limit=6, session_class=_requests.Session, session=None,
+                 public_url=_PUBLIC_URL,
+                 private_url=_PRIVATE_URL,
+                 limit=6, session_class=_requests.Session,
+                 session=None, startup_lock=None,
+                 semaphore=None, timer=None,
                  nonce_iter=None, nonce_lock=None):
         """Initialize the Poloniex private client."""
-        super(Poloniex, self).__init__(public_url, limit, session_class, session)
+        super(Poloniex, self).__init__(public_url, limit,
+                                       session_class,
+                                       session, startup_lock,
+                                       semaphore, timer)
         self._private_url = private_url
         self._apikey = apikey
         self._secret = secret
