@@ -324,10 +324,11 @@ class Poloniex(PoloniexPublic):
         return self._private('marginBuy', currencyPair=currencyPair, rate=rate,
                              amount=amount, lendingRate=lendingRate)
 
-    def marginSell(self):
+    def marginSell(self, currencyPair, rate, amount, lendingRate=None):
         """Places a margin sell order in a given market. Parameters and output
         are the same as for the marginBuy method."""
-        return self._private('marginSell')
+        return self._private('marginSell', currencyPair=currencyPair, rate=rate,
+                             amount=amount, lendingRate=lendingRate)
 
     def getMarginPosition(self, currencyPair):
         """Returns information about your margin position in a given market,
