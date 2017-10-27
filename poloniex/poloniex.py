@@ -125,7 +125,11 @@ class Poloniex(PoloniexPublic):
             self._apikey, self._secret = apikey, secret
 
         def __call__(self, request):
-            signature = _hmac.new(self._secret, request.body, _hashlib.sha512)
+            signature = _hmac.new(
+                bytes(self._secret, 'utf-8'),
+                str.encode(request.body, 'utf-8'),
+                _hashlib.sha512
+            )
             request.headers.update({"Key": self._apikey,
                                     "Sign": signature.hexdigest()})
             return request
