@@ -72,7 +72,6 @@ Name               Symbol  Address
 Bitcoin            BTC     13NpLwXgEP8d9NpDUHptY6BypFRNXHL3tr
 Ethereum           ETH     0x8f61777b0f951ed5df684da495d82171aa3645ea
 Litecoin           LTC     LKM1eTU8BmvCECJr54Tz1pHDr4e2AS41Ai
-Ethereum Classic   ETC     0xb564911a90b6f37ce9bd756f44e91cdf8475b402
 =================  ======  ==========================================
 
 
