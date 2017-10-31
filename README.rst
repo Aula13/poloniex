@@ -63,6 +63,12 @@ Private APIs
    print(balances)
 
 
+Used in
+-------
+
+* `crypto_trader`_: Trading automation on poloniex cyriptocoin exchange
+
+
 Donations
 ---------
 
@@ -77,3 +83,4 @@ Litecoin           LTC     LKM1eTU8BmvCECJr54Tz1pHDr4e2AS41Ai
 
 .. _PyPI: https://pypi.python.org/pypi/poloniex
 .. _Poloniex API: https://poloniex.com/support/api/
+.. _crypto_trader: https://github.com/timucin/cyripto_trader
