@@ -5,7 +5,7 @@ with open('README.rst') as README:
     long_description = long_description[long_description.index('Description'):]
 
 setup(name='poloniex',
-      version='0.0.11',
+      version='0.0.12',
       description='Poloniex API client for humans',
       long_description=long_description,
       url='http://github.com/Aula13/poloniex',
