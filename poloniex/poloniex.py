@@ -126,7 +126,7 @@ class Poloniex(PoloniexPublic):
 
         def __call__(self, request):
             signature = _hmac.new(
-                bytes(self._secret, 'utf-8'),
+                str.encode(self._secret, 'utf-8'),
                 str.encode(request.body, 'utf-8'),
                 _hashlib.sha512
             )
