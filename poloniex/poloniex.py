@@ -68,7 +68,9 @@ class PoloniexPublic(object):
     def _public(self, command, **params):
         """Invoke the 'command' public API with optional params."""
         params['command'] = command
-        return self.session.get(self._public_url, params=params)
+        response = self.session.get(self._public_url, params=params)
+        response.raise_for_status()
+        return response
 
     def returnTicker(self):
         """Returns the ticker for all markets."""
@@ -160,9 +162,11 @@ class Poloniex(PoloniexPublic):
 
         with self.nonce_lock:
             params.update({'command': command, 'nonce': next(self.nonce_iter)})
-            return self.session.post(
+            response = self.session.post(
                 self._private_url, data=params,
                 auth=Poloniex._PoloniexAuth(self._apikey, self._secret))
+            response.raise_for_status()
+            return response
 
     def returnBalances(self):
         """Returns all of your available balances."""
