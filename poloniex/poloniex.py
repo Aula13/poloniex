@@ -214,7 +214,7 @@ class Poloniex(PoloniexPublic):
         "all" to return open orders for all markets."""
         return self._private('returnOpenOrders', currencyPair=currencyPair)
 
-    def returnTradeHistory(self, currencyPair='all', start=None, end=None):
+    def returnTradeHistory(self, currencyPair='all', start=None, end=None, limit=500):
         """Returns your trade history for a given market, specified by the
         "currencyPair" POST parameter. You may specify "all" as the
         currencyPair to receive your trade history for all markets. You may
@@ -222,7 +222,7 @@ class Poloniex(PoloniexPublic):
         given in UNIX timestamp format; if you do not specify a range, it will
         be limited to one day."""
         return self._private('returnTradeHistory', currencyPair=currencyPair,
-                             start=start, end=end)
+                             start=start, end=end, limit=limit)
 
     def returnTradeHistoryPublic(self, currencyPair, start=None, end=None):
         """Returns the past 200 trades for a given market, or up to 50,000
