@@ -1,6 +1,7 @@
 import six as _six
 import hmac as _hmac
 import time as _time
+import atexit as _atexit
 import hashlib as _hashlib
 import datetime as _datetime
 import requests as _requests
@@ -58,6 +59,7 @@ class PoloniexPublic(object):
         self.semaphore = semaphore or Semaphore(limit)
         self.timer = timer or RecurrentTimer(1.0, self.semaphore.clear)
         self.session = session or session_class()
+        _atexit.register(self.__del__)
 
     def __del__(self):
         self.timer.cancel()
