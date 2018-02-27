@@ -15,3 +15,5 @@ deploy:
   on:
     tags: true
     branch: master
+    python: 3.6  # we build an universal wheel once (python 3.6 is here to make this rule fire only once)
+  distributions: bdist_wheel
