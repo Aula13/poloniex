@@ -9,7 +9,7 @@ poloniex
 Description
 -----------
 
-Alpha version of a `Poloniex API`_ client for humans
+`Poloniex API`_ client for humans
 
 Installation
 ------------
