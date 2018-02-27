@@ -5,7 +5,7 @@ with open('README.rst') as README:
     long_description = README.read()
     long_description = long_description[long_description.index('Description'):]
 
-if (version_info < (2, 7)) or ((3, 0) <= version_info <= (3, 3)):
+if (version_info < (2, 7)) or ((3, 0) <= version_info < (3, 4)):
     pytest_runner = 'pytest-runner<=3.0'
 else:
     pytest_runner = 'pytest-runner'
