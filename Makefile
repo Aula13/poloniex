@@ -15,7 +15,7 @@ test: install
 	$(VENV)/bin/python setup.py test
 
 clean:
-	rm -rf $(VENV)
+	rm -rf $(VENV) build dist *.egg-info
 
 $(VENV):
 	virtualenv $(VENV)
