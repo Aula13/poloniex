@@ -37,13 +37,20 @@ def _api_wrapper(fn):
                       if value is not None)
 
         self.semaphore.acquire()
-        resp = fn(self, command, **params).json(object_hook=_AutoCastDict)
-        # check for 'error' then check for status due to Poloniex inconsistency
-        if 'error' in resp:
-            raise PoloniexCommandException(resp['error'])
-        else:
+        resp = fn(self, command, **params)
+        try:
+            respdata = resp.json(object_hook=_AutoCastDict)
+        except:
+            # use more specific error if available or fallback to ValueError
             resp.raise_for_status()
-        return resp
+            raise Exception('No JSON object could be decoded')
+
+        # check for 'error' then check for status due to Poloniex inconsistency
+        if 'error' in respdata:
+            raise PoloniexCommandException(respdata['error'])
+
+        resp.raise_for_status()
+        return respdata
 
     return _fn
 
