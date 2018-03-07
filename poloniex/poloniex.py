@@ -38,8 +38,11 @@ def _api_wrapper(fn):
 
         self.semaphore.acquire()
         resp = fn(self, command, **params).json(object_hook=_AutoCastDict)
+        # check for 'error' then check for status due to Poloniex inconsistency
         if 'error' in resp:
             raise PoloniexCommandException(resp['error'])
+        else:
+            resp.raise_for_status()
         return resp
 
     return _fn
@@ -71,7 +74,6 @@ class PoloniexPublic(object):
         """Invoke the 'command' public API with optional params."""
         params['command'] = command
         response = self.session.get(self._public_url, params=params)
-        response.raise_for_status()
         return response
 
     def returnTicker(self):
@@ -167,7 +169,6 @@ class Poloniex(PoloniexPublic):
             response = self.session.post(
                 self._private_url, data=params,
                 auth=Poloniex._PoloniexAuth(self._apikey, self._secret))
-            response.raise_for_status()
             return response
 
     def returnBalances(self):
