@@ -2,6 +2,7 @@ import six as _six
 import hmac as _hmac
 import time as _time
 import atexit as _atexit
+import locale as _locale
 import hashlib as _hashlib
 import datetime as _datetime
 import requests as _requests
@@ -23,6 +24,9 @@ def _api_wrapper(fn):
     def _convert(value):
         if isinstance(value, _datetime.date):
             return value.strftime('%s')
+        if not isinstance(value, str):
+            # locale UNAWARE conversion (always uses . as decimal separator)
+            return '{}'.format(value)
         return value
 
     @_six.wraps(fn)
@@ -253,8 +257,9 @@ class Poloniex(PoloniexPublic):
         A post-only order will only be placed if no portion of it fills
         immediately; this guarantees you will never pay the taker fee on any
         part of the order that fills."""
-        return self._private('buy', currencyPair=currencyPair, rate=rate,
-                             amount=amount, fillOrKill=fillOrKill,
+        return self._private('buy', currencyPair=currencyPair,
+                             rate=float(rate), amount=float(amount),
+                             fillOrKill=fillOrKill,
                              immediateOrCancel=immediateOrCancel,
                              postOnly=postOnly)
 
@@ -262,8 +267,9 @@ class Poloniex(PoloniexPublic):
              immediateOrCancel=None, postOnly=None):
         """Places a sell order in a given market. Parameters and output are
         the same as for the buy method."""
-        return self._private('sell', currencyPair=currencyPair, rate=rate,
-                             amount=amount, fillOrKill=fillOrKill,
+        return self._private('sell', currencyPair=currencyPair,
+                             rate=float(rate), amount=float(amount),
+                             fillOrKill=fillOrKill,
                              immediateOrCancel=immediateOrCancel,
                              postOnly=postOnly)
 
@@ -280,8 +286,10 @@ class Poloniex(PoloniexPublic):
          may optionally specify "amount" if you wish to change the amount of
          the new order. "postOnly" or "immediateOrCancel" may be specified for
          exchange orders, but will have no effect on margin orders. """
-        return self._private('moveOrder', orderNumber=orderNumber, rate=rate,
-                             amount=amount, postOnly=postOnly,
+        return self._private('moveOrder', orderNumber=orderNumber,
+                             rate=float(rate),
+                             amount=float(amount) if amount else None,
+                             postOnly=postOnly,
                              immediateOrCancel=immediateOrCancel)
 
     def withdraw(self, currency, amount, address, paymentId=None):
@@ -290,7 +298,8 @@ class Poloniex(PoloniexPublic):
         must be enabled for your API key. Required POST parameters are
         "currency", "amount", and "address". For XMR withdrawals, you may
         optionally specify "paymentId"."""
-        return self._private('withdraw', currency=currency, amount=amount,
+        return self._private('withdraw', currency=currency,
+                             amount=float(amount),
                              address=address, paymentId=paymentId)
 
     def returnFeeInfo(self):
@@ -332,14 +341,22 @@ class Poloniex(PoloniexPublic):
          specify a maximum lending rate using the "lendingRate" parameter.
          If successful, the method will return the order number and any trades
          immediately resulting from your order."""
-        return self._private('marginBuy', currencyPair=currencyPair, rate=rate,
-                             amount=amount, lendingRate=lendingRate)
+        return self._private(
+            'marginBuy',
+            currencyPair=currencyPair,
+            rate=float(rate),
+            amount=float(amount),
+            lendingRate=float(lendingRate) if lendingRate else None)
 
     def marginSell(self, currencyPair, rate, amount, lendingRate=None):
         """Places a margin sell order in a given market. Parameters and output
         are the same as for the marginBuy method."""
-        return self._private('marginSell', currencyPair=currencyPair, rate=rate,
-                             amount=amount, lendingRate=lendingRate)
+        return self._private(
+            'marginSell',
+            currencyPair=currencyPair,
+            rate=float(rate),
+            amount=float(amount),
+            lendingRate=float(lendingRate) if lendingRate else None)
 
     def getMarginPosition(self, currencyPair):
         """Returns information about your margin position in a given market,
@@ -365,8 +382,9 @@ class Poloniex(PoloniexPublic):
         are "currency", "amount", "duration", "autoRenew" (0 or 1), and
         "lendingRate". """
         return self._private('createLoanOffer', currency=currency,
-                             amount=amount, duration=duration,
-                             autoRenew=autoRenew, lendingRate=lendingRate)
+                             amount=float(amount), duration=duration,
+                             autoRenew=autoRenew,
+                             lendingRate=float(lendingRate))
 
     def cancelLoanOffer(self, orderNumber):
         """Cancels a loan offer specified by the "orderNumber" POST
