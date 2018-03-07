@@ -11,7 +11,7 @@ else:
     pytest_runner = 'pytest-runner'
 
 setup(name='poloniex',
-      version='0.0.15',
+      version='0.0.17',
       description='Poloniex API client for humans',
       long_description=long_description,
       url='http://github.com/Aula13/poloniex',
