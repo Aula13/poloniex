@@ -5,6 +5,10 @@ poloniex
 
 .. image:: https://travis-ci.org/Aula13/poloniex.svg?branch=master
     :target: https://travis-ci.org/Aula13/poloniex
+    
+.. image:: https://badge.fury.io/py/poloniex.svg
+    :target: https://badge.fury.io/py/poloniex
+    :alt: Code coverage
 
 Description
 -----------
