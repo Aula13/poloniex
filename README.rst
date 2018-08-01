@@ -73,17 +73,29 @@ Used in
 * `crypto_trader`_: Trading automation on poloniex cyriptocoin exchange
 
 
+Common Errors
+-------------
+
+If you are having a nonce error or an exception like this one below, you probably need to generate a new api key-secret pair.
+
+.. code:: python
+
+        Traceback (most recent call last):
+          File "C:/Users/name/.PyCharmCE2018.2/config/scratches/scratch.py", line 10, in <module>
+            balances = polo.returnBalances()
+          File "C:\Users\name\AppData\Roaming\Python\Python27\site-packages\poloniex\poloniex.py", line 183, in returnBalances
+            return self._private('returnBalances')
+          File "C:\Users\name\AppData\Roaming\Python\Python27\site-packages\poloniex\poloniex.py", line 50, in _fn
+            raise PoloniexCommandException(respdata['error'])
+        poloniex.exceptions.PoloniexCommandException: Nonce must be greater than 1532206573738226. You provided 1533067257748.
+
+        Process finished with exit code 1
+
+
 Donations
 ---------
 
-=================  ======  ==========================================
-Name               Symbol  Address
-=================  ======  ==========================================
-Bitcoin            BTC     13NpLwXgEP8d9NpDUHptY6BypFRNXHL3tr
-Ethereum           ETH     0x8f61777b0f951ed5df684da495d82171aa3645ea
-Litecoin           LTC     LKM1eTU8BmvCECJr54Tz1pHDr4e2AS41Ai
-=================  ======  ==========================================
-
+BTC     13NpLwXgEP8d9NpDUHptY6BypFRNXHL3tr
 
 .. _PyPI: https://pypi.python.org/pypi/poloniex
 .. _Poloniex API: https://poloniex.com/support/api/
